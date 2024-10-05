@@ -1,0 +1,72 @@
+[
+    {
+        "userId": 13,
+        "name": "Alice Smith",
+        "email": "alice.smith@example.com",
+        "age": 28,
+        "location": "New York, USA"
+    },
+    {
+        "userId": 2,
+        "name": "Bob Johnson",
+        "email": "bob.johnson@example.com",
+        "age": 34,
+        "location": "Los Angeles, USA"
+    },
+    {
+        "userId": 3,
+        "name": "Charlie Brown",
+        "email": "charlie.brown@example.com",
+        "age": 25,
+        "location": "Chicago, USA"
+    },
+    {
+        "userId": 4,
+        "name": "Diana Prince",
+        "email": "diana.prince@example.com",
+        "age": 31,
+        "location": "London, UK"
+    },
+    {
+        "userId": 5,
+        "name": "Edward Green",
+        "email": "edward.green@example.com",
+        "age": 29,
+        "location": "Sydney, Australia"
+    },
+    {
+        "userId": 6,
+        "name": "Fiona White",
+        "email": "fiona.white@example.com",
+        "age": 27,
+        "location": "Toronto, Canada"
+    },
+    {
+        "userId": 7,
+        "name": "George Black",
+        "email": "george.black@example.com",
+        "age": 40,
+        "location": "Berlin, Germany"
+    },
+    {
+        "userId": 8,
+        "name": "Hannah Adams",
+        "email": "hannah.adams@example.com",
+        "age": 22,
+        "location": "Paris, France"
+    },
+    {
+        "userId": 9,
+        "name": "Isaac Newton",
+        "email": "isaac.newton@example.com",
+        "age": 35,
+        "location": "Rome, Italy"
+    },
+    {
+        "userId": 10,
+        "name": "Jasmine Lee",
+        "email": "jasmine.lee@example.com",
+        "age": 30,
+        "location": "Tokyo, Japan"
+    }
+]
