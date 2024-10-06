@@ -30,17 +30,19 @@
 </template>
 
 <script setup lang="ts">
-// Импортируем необходимые функции из Vue
 import { defineProps, defineEmits, onMounted } from 'vue';
 import { useTodosStore } from '../stores/TodoStore';
+import type { Todo } from '../contracts/types'; 
 
-// Описание интерфейса для задачи
-const emit = defineEmits(['deleteTodo']);
-const todosStore  = useTodosStore();
+const emit = defineEmits<{
+  (e: 'deleteTodo', id: number): void; // Типизируем событие удаления
+}>();
+
+const todosStore = useTodosStore();
 
 // Объявляем props для компонента
 const props = defineProps<{
-  todos: any[]; // Принимаем массив объектов Todo
+  todos: Todo[]; // Принимаем массив объектов Todo
   countPages: number; // Указываем тип для countPages
 }>();
 

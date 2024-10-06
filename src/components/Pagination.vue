@@ -1,30 +1,32 @@
 <template>
-    <div class="pagination-controls">
-      <button 
-        v-for="page in totalPages" 
-        :key="page" 
-        @click="setPage(page)" 
-        :class="{ active: currentPage === page }"
-      >
-        {{ page }}
-      </button>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { defineProps, defineEmits } from 'vue';
-  
-  const props = defineProps<{
-    totalPages: number;
-    currentPage: number;
-  }>();
-  
-  const emit = defineEmits();
-  
-  function setPage(page: number) {
-    emit('update:currentPage', page);
-  }
-  </script>
+  <div class="pagination-controls">
+    <button 
+      v-for="page in totalPages" 
+      :key="page" 
+      @click="setPage(page)" 
+      :class="{ active: currentPage === page }"
+    >
+      {{ page }}
+    </button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+
+const props = defineProps<{
+  totalPages: number;
+  currentPage: number;
+}>();
+
+const emit = defineEmits<{
+  (event: 'update:currentPage', page: number): void;
+}>();
+
+function setPage(page: number) {
+  emit('update:currentPage', page);
+}
+</script>
   
   <style scoped>
   .pagination-controls {

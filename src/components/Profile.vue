@@ -44,16 +44,18 @@
 import { ref, onMounted, computed } from 'vue';
 import { useProfileStore } from '../stores/ProfilesStore';
 import Pagination from './Pagination.vue';
+import type { Profile, NewProfile } from '../contracts/types';
 
-const emit = defineEmits(['selectProfile']);
+
+const emit = defineEmits<{ (e: 'selectProfile', profile: Profile): void }>(); 
 
 const profileStore = useProfileStore();
 
-const profiles = computed(() => profileStore.profiles);
-const usedProfile = computed(() => profileStore.userProfile);
+const profiles = computed<Profile[]>(() => profileStore.profiles); 
+const usedProfile = computed<Profile | null>(() => profileStore.usedProfile); 
 
 const showForm = ref(false);
-const newProfile = ref({
+const newProfile = ref<NewProfile>({ 
   name: '',
   age: 0,
   email: '',
@@ -69,7 +71,7 @@ const paginatedProfiles = computed(() => {
   return profiles.value.slice(start, start + itemsPerPage);
 });
 
-const emitSelectProfile = (profile: any) => {
+const emitSelectProfile = (profile: Profile) => { 
   profileStore.setUserProfile(profile);
   emit('selectProfile', profile);
 };
@@ -77,8 +79,7 @@ const emitSelectProfile = (profile: any) => {
 const addProfile = () => {
   if (newProfile.value.name && newProfile.value.age && newProfile.value.email && newProfile.value.location) {
     profileStore.addUserProfile({
-      ...newProfile.value,
-      userId: Date.now()
+      ...newProfile.value
     });
     showForm.value = false;
     newProfile.value = { name: '', age: 0, email: '', location: '' };
