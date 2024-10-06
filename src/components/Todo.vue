@@ -1,22 +1,21 @@
 <template>
-  <div>
-    <!-- Форма для добавления новой задачи -->
-    <button class="add-todo-button" @click="showForm = !showForm">
-      {{ showForm ? 'Отменить добавление' : 'Добавить задачу' }}
-    </button>
-
-    <div v-if="showForm" class="add-todo-form">
-      <label>
-        Задача:
-        <input v-model="newTodo.todo" type="text" placeholder="Введите задачу" />
-      </label>
-      <button class="save-button" @click="addTodo">Сохранить задачу</button>
+  <div class="todo">
+    <div class="todo__button-container">
+      <button class="todo__button-add" @click="showForm = !showForm">
+        {{ showForm ? 'Отменить добавление' : 'Добавить задачу' }}
+      </button>
     </div>
 
-    <!-- Таблица задач с пагинацией -->
+    <div v-if="showForm" class="todo__form">
+      <label class="todo__label">
+        Задача:
+        <input v-model="newTodo.todo" type="text" placeholder="Введите задачу" class="todo__input" />
+      </label>
+      <button class="todo__button-save" @click="addTodo">Сохранить задачу</button>
+    </div>
+
     <TodoTable :todos="paginatedTodos" :countPages="totalPages" @deleteTodo="deleteTodo" />
-    
-    <!-- Элементы управления пагинацией -->
+
     <Pagination 
       :totalPages="totalPages" 
       :currentPage="currentPage" 
@@ -30,7 +29,7 @@ import { ref, computed, onMounted } from 'vue';
 import TodoTable from './TodoTable.vue';
 import { useTodosStore } from '../stores/TodoStore';
 import { useProfileStore } from '../stores/ProfilesStore';
-import Pagination from './Pagination.vue'; // Импортируем компонент пагинации
+import Pagination from './Pagination.vue';
 
 const todosStore = useTodosStore();
 const profileStore = useProfileStore();
@@ -42,7 +41,6 @@ const filteredTodos = computed(() => {
   return todosStore.todos.filter(todo => todo.userId === usedProfile.value.userId);
 });
 
-// Пагинация
 const currentPage = ref(1);
 const itemsPerPage = 15;
 
@@ -56,7 +54,6 @@ const paginatedTodos = computed(() => {
   return filteredTodos.value.slice(start, end);
 });
 
-// Локальное состояние для управления формой и новой задачей
 const showForm = ref(false);
 const newTodo = ref({
   todo: '',
@@ -64,12 +61,10 @@ const newTodo = ref({
   userId: usedProfile.value?.userId || 0,
 });
 
-// Метод для удаления задачи
 function deleteTodo(id: number) {
   todosStore.removeTodo(id);
 }
 
-// Метод для добавления новой задачи
 function addTodo() {
   if (newTodo.value.todo) {
     todosStore.addTodo({
@@ -77,25 +72,20 @@ function addTodo() {
       userId: usedProfile.value?.userId || 0,
     });
 
-    // Сбрасываем форму и скрываем её после добавления задачи
     newTodo.value = { todo: '', completed: false, userId: usedProfile.value?.userId || 0 };
     showForm.value = false;
-
-    // Сбросить текущую страницу к первой после добавления новой задачи
     currentPage.value = 1;
   } else {
     alert('Пожалуйста, заполните задачу!');
   }
 }
 
-// Метод для установки текущей страницы
 function setPage(page: number) {
   if (page > 0 && page <= totalPages.value) {
     currentPage.value = page;
   }
 }
 
-// Получаем данные при монтировании компонента
 onMounted(async () => {
   if (!todosStore.todos.length) {
     await todosStore.fetchTodos();
@@ -108,7 +98,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.add-todo-button {
+.todo__button-container {
+  width: 100%;
+  text-align: center;
+}
+.todo__button-add {
   background-color: #27ae60;
   color: white;
   border: none;
@@ -119,28 +113,28 @@ onMounted(async () => {
   font-size: 1rem;
 }
 
-.add-todo-button:hover {
+.todo__button-add:hover {
   background-color: #2ecc71;
 }
 
-.add-todo-form {
+.todo__form {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.add-todo-form label {
+.todo__label {
   margin-bottom: 10px;
 }
 
-.add-todo-form input {
+.todo__input {
   padding: 5px;
   margin-left: 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-.save-button {
+.todo__button-save {
   align-self: flex-start;
   background-color: #3498db;
   color: white;
@@ -151,7 +145,7 @@ onMounted(async () => {
   margin-top: 10px;
 }
 
-.save-button:hover {
+.todo__button-save:hover {
   background-color: #2980b9;
 }
 </style>

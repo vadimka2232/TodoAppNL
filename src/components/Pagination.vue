@@ -22,7 +22,6 @@
   const emit = defineEmits();
   
   function setPage(page: number) {
-    // Вызов события для установки страницы
     emit('update:currentPage', page);
   }
   </script>
@@ -37,22 +36,22 @@
   
   .pagination-controls button {
     margin: 0 5px;
-    padding: 8px 12px; /* Добавляем небольшой отступ */
-    background-color: #f0f0f0; /* Светлый фон для кнопок */
-    color: #333; /* Темный текст */
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    color: #333;
     border: none;
-    border-radius: 4px; /* Округленные углы */
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s; /* Плавный переход при наведении */
+    transition: background-color 0.3s;
   }
   
   .pagination-controls button.active {
-    background-color: #e74c3c; /* Цвет для активной страницы */
-    color: white; /* Белый текст для активной страницы */
+    background-color: #e74c3c;
+    color: white;
   }
   
   .pagination-controls button:hover {
-    background-color: #e0e0e0; /* Светло-серый фон при наведении */
+    background-color: #e0e0e0;
   }
   </style>
   

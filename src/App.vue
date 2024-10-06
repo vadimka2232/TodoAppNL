@@ -1,39 +1,47 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-  <header>
-    <div class="container">
-      <nav class="nav">
-        <RouterLink to="/" class="links">Profiles</RouterLink>
-        <RouterLink to="/todo" class="links">Todos</RouterLink>
-        <RouterView />
-      </nav>
+  <div class="app-container">
+    <nav class="app-nav">
+      <RouterLink to="/" class="app-nav__link">Profiles</RouterLink>
+      <RouterLink to="/todo" class="app-nav__link">Todos</RouterLink>
+    </nav>
+    <div class="app-content">
+      <RouterView />
     </div>
-  </header>
+  </div>
 </template>
 
 <style scoped>
-.container {
+.app-container {
   max-width: 100wh;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+
+  align-items: center; 
 }
-.nav {
- text-align: center;
+
+.app-nav {
+  text-align: center;
 }
-.links {
+
+.app-nav__link {
   width: 200px;
-  font-size: 1.8rem; /* Увеличен размер шрифта */
-  display:  inline-block;
-  border-bottom: 1px solid black;
+  font-size: 1.8rem;
+  display: inline-block;
   border: 1px solid black;
-  padding: 10px; /* Увеличено пространство внутри кнопок */
+  border-bottom: 1px solid black;
+  padding: 10px; 
   color: black;
-  text-align: center; /* Центрирование текста */
-  text-decoration: none; /* Убираем подчеркивание */
-  transition: background-color 0.3s ease; /* Анимация при наведении */
+  text-align: center; 
+  text-decoration: none; 
+  transition: background-color 0.3s ease; 
+}
+
+.app-nav__link:hover {
+  background-color: #f0f0f0;
 }
 </style>

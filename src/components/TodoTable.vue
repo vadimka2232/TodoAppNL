@@ -1,11 +1,11 @@
 <template>
-  <div class="Table">
+  <div class="table">
     <table border="1">
       <thead>
-        <tr class="Table_title">
+        <tr class="table-title">
           <th class="col-id">ID</th>
           <th class="col-todo">Todo</th>
-          <th class="col-completed">Completed</th> <!-- Новый столбец Completed -->
+          <th class="col-completed">Completed</th>
           <th class="col-actions">Actions</th>
         </tr>
       </thead>
@@ -13,11 +13,12 @@
         <tr v-for="item in props.todos" :key="item.id" class="tr-item">
           <td class="tr-id">{{ item.id }}</td>
           <td class="tr-todo">{{ item.todo }}</td>
-          <td class="tr-completed"> <!-- Ячейка для отображения состояния выполненной задачи -->
+          <td class="tr-completed">
             <input 
               type="checkbox" 
               :checked="item.completed" 
-              @change="toggleCompletion(item.id, !item.completed)">
+              @change="toggleCompletion(item.id, !item.completed)"
+            >
           </td>
           <td>
             <button @click="deleteTodo(item.id)" class="delete-button">Удалить</button>
@@ -40,30 +41,32 @@ const todosStore  = useTodosStore();
 // Объявляем props для компонента
 const props = defineProps<{
   todos: any[]; // Принимаем массив объектов Todo
-  countPages: Number;
+  countPages: number; // Указываем тип для countPages
 }>();
 
 const toggleCompletion = (id: number, completed: boolean) => {
   todosStore.updateTodoCompletion(id, completed); // Обновляем состояние в store
 };
+
 // Функция для удаления задачи
 const deleteTodo = (id: number) => {
   emit('deleteTodo', id); // Передаем id задачи в событие
 };
 
+// Устанавливаем текущую страницу задач в store при монтировании
 onMounted(async () => {
   todosStore.setTodosPage(props.todos);
 });
 </script>
 
 <style scoped>
-.Table {
+.table {
   margin: 20px;
   border-collapse: collapse; /* Убираем двойные границы */
   width: 100%; /* Задаем ширину таблицы */
 }
 
-.Table_title th {
+.table-title th {
   border-bottom: 2px solid black; /* Толстая черная линия под заголовками */
   padding: 10px; /* Отступ для заголовков */
   text-align: left; /* Выравнивание текста в заголовках */

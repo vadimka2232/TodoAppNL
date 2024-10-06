@@ -1,23 +1,34 @@
 <template>
-  <div class="profiles-container">
-    <button class="add-profile-button" @click="showForm = !showForm">
+  <div class="profiles">
+    <button class="profiles__button-add" @click="showForm = !showForm">
       {{ showForm ? 'Отменить добавление' : 'Добавить профиль' }}
     </button>
 
-    <div v-if="showForm" class="add-profile-form">
-      <label>Имя: <input v-model="newProfile.name" type="text" placeholder="Введите имя" /></label>
-      <label>Возраст: <input v-model="newProfile.age" type="number" placeholder="Введите возраст" /></label>
-      <label>Почта: <input v-model="newProfile.email" type="email" placeholder="Введите почту" /></label>
-      <label>Место проживания: <input v-model="newProfile.location" type="text" placeholder="Введите место проживания" /></label>
-      <button class="save-button" @click="addProfile">Сохранить профиль</button>
+    <div v-if="showForm" class="profiles__form">
+      <label class="profiles__label">Имя: 
+        <input v-model="newProfile.name" type="text" placeholder="Введите имя" class="profiles__input" />
+      </label>
+      <label class="profiles__label">Возраст: 
+        <input v-model="newProfile.age" type="number" placeholder="Введите возраст" class="profiles__input" />
+      </label>
+      <label class="profiles__label">Почта: 
+        <input v-model="newProfile.email" type="email" placeholder="Введите почту" class="profiles__input" />
+      </label>
+      <label class="profiles__label">Место проживания: 
+        <input v-model="newProfile.location" type="text" placeholder="Введите место проживания" class="profiles__input" />
+      </label>
+      <button class="profiles__button-save" @click="addProfile">Сохранить профиль</button>
     </div>
 
-    <ul class="profile-list">
-      <li v-for="profile in paginatedProfiles" :key="profile.userId" :class="['profile-item', { 'selected-profile': profile.userId === usedProfile?.userId }]">
-        <div class="profile-info">
-          <strong class="profile-name">Name:</strong> {{ profile.name }}
+    <ul class="profiles__list">
+      <li 
+        v-for="profile in paginatedProfiles" 
+        :key="profile.userId" 
+        :class="['profiles__item', { 'profiles__item--selected': profile.userId === usedProfile?.userId }]">
+        <div class="profiles__info">
+          <strong class="profiles__name">Name:</strong> {{ profile.name }}
         </div>
-        <button class="select-button" @click="emitSelectProfile(profile)">Выбрать профиль</button>
+        <button class="profiles__button-select" @click="emitSelectProfile(profile)">Выбрать профиль</button>
       </li>
     </ul>
 
@@ -32,7 +43,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useProfileStore } from '../stores/ProfilesStore';
-import Pagination from './Pagination.vue'; // Импортируем компонент пагинации
+import Pagination from './Pagination.vue';
 
 const emit = defineEmits(['selectProfile']);
 
@@ -41,7 +52,6 @@ const profileStore = useProfileStore();
 const profiles = computed(() => profileStore.profiles);
 const usedProfile = computed(() => profileStore.userProfile);
 
-// Локальное состояние для управления формой и пагинацией
 const showForm = ref(false);
 const newProfile = ref({
   name: '',
@@ -50,38 +60,33 @@ const newProfile = ref({
   location: ''
 });
 const currentPage = ref(1);
-const itemsPerPage = 5; // Количество профилей на странице
+const itemsPerPage = 5;
 
-// Вычисляем общее количество страниц
 const totalPages = computed(() => Math.ceil(profiles.value.length / itemsPerPage));
 
-// Вычисляем профили для отображения на текущей странице
 const paginatedProfiles = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   return profiles.value.slice(start, start + itemsPerPage);
 });
 
-// Метод для обработки клика на профиль
 const emitSelectProfile = (profile: any) => {
   profileStore.setUserProfile(profile);
   emit('selectProfile', profile);
 };
 
-// Метод для добавления нового профиля
 const addProfile = () => {
   if (newProfile.value.name && newProfile.value.age && newProfile.value.email && newProfile.value.location) {
     profileStore.addUserProfile({
       ...newProfile.value,
-      userId: Date.now() // Генерируем уникальный ID для профиля
+      userId: Date.now()
     });
-    showForm.value = false; // Закрываем форму после добавления
-    newProfile.value = { name: '', age: 0, email: '', location: '' }; // Сбрасываем поля формы
+    showForm.value = false;
+    newProfile.value = { name: '', age: 0, email: '', location: '' };
   } else {
     alert('Пожалуйста, заполните все поля!');
   }
 };
 
-// Изменение страницы
 const changePage = (page: number) => {
   currentPage.value = page;
 };
@@ -94,14 +99,14 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.profiles-container {
+.profiles {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px 0px;
 }
 
-.add-profile-button {
+.profiles__button-add {
   background-color: #27ae60;
   color: white;
   border: none;
@@ -112,28 +117,28 @@ onMounted(async () => {
   font-size: 1rem;
 }
 
-.add-profile-button:hover {
+.profiles__button-add:hover {
   background-color: #2ecc71;
 }
 
-.add-profile-form {
+.profiles__form {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.add-profile-form label {
+.profiles__label {
   margin-bottom: 10px;
 }
 
-.add-profile-form input {
+.profiles__input {
   padding: 5px;
   margin-left: 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-.save-button {
+.profiles__button-save {
   align-self: flex-start;
   background-color: #3498db;
   color: white;
@@ -144,38 +149,17 @@ onMounted(async () => {
   margin-top: 10px;
 }
 
-.save-button:hover {
+.profiles__button-save:hover {
   background-color: #2980b9;
 }
 
-/* Восстановленные стили для кнопки "Выбрать профиль" */
-.select-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.select-button:hover {
-  background-color: #2980b9;
-}
-
-.select-button:active {
-  background-color: #1c6ea4;
-}
-
-/* Остальные стили для списка профилей */
-.profile-list {
+.profiles__list {
   width: 100%;
   list-style-type: none;
   padding: 0;
 }
 
-.profile-item {
+.profiles__item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -186,20 +170,39 @@ onMounted(async () => {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.profile-item:not(:last-child) {
+.profiles__item:not(:last-child) {
   margin-bottom: 15px;
 }
 
-.profile-item:hover {
+.profiles__item:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.selected-profile {
+.profiles__item--selected {
   background-color: #d6eaf8;
   border: 2px solid #3498db;
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.profiles__button-select {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.profiles__button-select:hover {
+  background-color: #2980b9;
+}
+
+.profiles__button-select:active {
+  background-color: #1c6ea4;
 }
 </style>

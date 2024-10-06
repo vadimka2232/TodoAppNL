@@ -4,35 +4,35 @@ import { ref } from 'vue';
 export const useProfileStore = defineStore('profileStore', () => {
   const profiles = ref([]);
   const userProfile = ref();
+  const nextId = ref(1);
 
-  // Асинхронная функция для загрузки профилей
   async function fetchProfiles() {
     try {
       const response = await fetch('/profilesApi/profiles.json');
       const data = await response.json();
       profiles.value = data;
 
-      // Если профиль не выбран, выбрать первый по умолчанию
       if (!userProfile.value) {
         userProfile.value = profiles.value[0];
       }
+      
+      nextId.value = profiles.value.length ? Math.max(...profiles.value.map(p => p.userId)) + 1 : 1;
     } catch (error) {
-      console.error('Error fetching profiles:', error);
+      console.error('Error fetching profiles:', error); 
     }
   }
 
-  // Функция для установки выбранного профиля
   function setUserProfile(profile: any) {
     userProfile.value = profile;
   }
 
-  // Функция для добавления нового профиля
   function addUserProfile(newProfile: any) {
     const profileWithId = {
       ...newProfile,
-      userId: Date.now(), // Генерируем уникальный ID для нового профиля
+      userId: nextId.value,
     };
-    profiles.value.push(profileWithId); // Добавляем новый профиль в массив
+    profiles.value.push(profileWithId);
+    nextId.value++; 
   }
 
   return {
@@ -40,6 +40,6 @@ export const useProfileStore = defineStore('profileStore', () => {
     userProfile,
     profiles,
     fetchProfiles,
-    addUserProfile, // Экспортируем функцию добавления
+    addUserProfile,
   };
 });
