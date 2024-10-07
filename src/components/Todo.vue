@@ -30,8 +30,8 @@ import Pagination from './Pagination.vue';
 import TodoTable from './TodoTable.vue';
 import { useTodosStore } from '../stores/TodoStore';
 import { useProfileStore } from '../stores/ProfilesStore';
-import type { NewTodo } from '../contracts/types'; 
-import type { Profile } from '../contracts/types'; 
+import type { NewTodo } from '../contracts/todos';
+import type { Profile } from '../contracts/profiles';
 
 const todosStore = useTodosStore();
 const profileStore = useProfileStore(); // Инициализация стейтов

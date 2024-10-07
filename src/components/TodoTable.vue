@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted } from 'vue';
 import { useTodosStore } from '../stores/TodoStore';
-import type { Todo } from '../contracts/types'; 
+import type { Todo } from '../contracts/todos'; 
 
 const emit = defineEmits<{
   (e: 'deleteTodo', id: number): void; // Типизируем событие удаления

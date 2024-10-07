@@ -44,7 +44,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useProfileStore } from '../stores/ProfilesStore';
 import Pagination from './Pagination.vue';
-import type { Profile, NewProfile } from '../contracts/types';
+import type { Profile, NewProfile } from '../contracts/profiles';
 
 
 const emit = defineEmits<{ (e: 'selectProfile', profile: Profile): void }>(); 
