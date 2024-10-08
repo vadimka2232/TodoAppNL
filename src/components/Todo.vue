@@ -6,13 +6,11 @@
       </button>
     </div>
 
-    <div v-if="showForm" class="todo__form">
-      <label class="todo__label">
-        Задача:
-        <input v-model="newTodo.todo" type="text" placeholder="Введите задачу" class="todo__input" />
-      </label>
-      <button class="todo__button-save" @click="addTodo">Сохранить задачу</button>
-    </div>
+    <FormComponent 
+      v-if="showForm" 
+      :formFields="formFields" 
+      @addTodo="addTodo"
+    />
 
     <TodoTable :todos="paginatedTodos" :countPages="totalPages" @deleteTodo="deleteTodo" />
 
@@ -28,73 +26,74 @@
 import { ref, computed, onMounted } from 'vue';
 import Pagination from './Pagination.vue';
 import TodoTable from './TodoTable.vue';
+import FormComponent from './FormComponent/FormComponent.vue'; // Импортируем универсальную форму
 import { useTodosStore } from '../stores/TodoStore';
 import { useProfileStore } from '../stores/ProfilesStore';
 import type { NewTodo } from '../contracts/todos';
 import type { Profile } from '../contracts/profiles';
 
 const todosStore = useTodosStore();
-const profileStore = useProfileStore(); // Инициализация стейтов
+const profileStore = useProfileStore(); 
 
-const usedProfile = computed<Profile | null>(() => profileStore.usedProfile); // Забрать выбранный профиль
+const usedProfile = computed<Profile | null>(() => profileStore.usedProfile);
 const filteredTodos = computed(() => {
   if (!usedProfile.value) return todosStore.todos;
   return todosStore.todos.filter((todo) => todo.userId === usedProfile.value.userId);
-}); // Отфильтровать по профилю задачи
+}); 
 
 const currentPage = ref(1);
 const itemsPerPage = 15;
 
 const totalPages = computed(() => {
   return Math.ceil(filteredTodos.value.length / itemsPerPage);
-}); // Высчитать количество страниц
+}); 
 
 const paginatedTodos = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   return filteredTodos.value.slice(start, end);
-}); // Функция для пересчитывания пагинации
+}); 
 
 const showForm = ref(false);
-const newTodo = ref<NewTodo>({
-  todo: '',
-  completed: false,
-  userId: usedProfile.value?.userId || 0,
-});
+
+// Определяем поля для формы
+const formFields = [
+  { label: 'Задача', model: 'todo', type: 'text', placeholder: 'Введите задачу' },
+];
 
 function deleteTodo(id: number) {
   todosStore.removeTodo(id);
-} // Функция удаления задачи
+} 
 
-function addTodo() {
-  if (newTodo.value.todo) {
+function addTodo(newTodo: NewTodo) {
+  showForm.value = false;
+  if (newTodo.todo) {
     todosStore.addTodo({
-      ...newTodo.value,
+      ...newTodo,
       userId: usedProfile.value?.userId || 0,
     });
 
-    newTodo.value = { todo: '', completed: false, userId: usedProfile.value?.userId || 0 };
     showForm.value = false;
     currentPage.value = 1;
   } else {
     alert('Пожалуйста, заполните задачу!');
   }
-} // Функция добавления задачи
+}
 
 function setPage(page: number) {
   if (page > 0 && page <= totalPages.value) {
     currentPage.value = page;
   }
-} // Назначить в ref переменную выбранную страницу
+} 
 
 onMounted(async () => {
   if (!todosStore.todos.length) {
     await todosStore.fetchTodos();
-  } // Забрать все задачи
+  }
 
   if (!usedProfile.value) {
     await profileStore.fetchProfiles();
-  } // Забрать все профиля
+  }
 });
 </script>
 

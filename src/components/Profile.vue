@@ -4,21 +4,7 @@
       {{ showForm ? 'Отменить добавление' : 'Добавить профиль' }}
     </button>
 
-    <div v-if="showForm" class="profiles__form">
-      <label class="profiles__label">Имя: 
-        <input v-model="newProfile.name" type="text" placeholder="Введите имя" class="profiles__input" />
-      </label>
-      <label class="profiles__label">Возраст: 
-        <input v-model="newProfile.age" type="number" placeholder="Введите возраст" class="profiles__input" />
-      </label>
-      <label class="profiles__label">Почта: 
-        <input v-model="newProfile.email" type="email" placeholder="Введите почту" class="profiles__input" />
-      </label>
-      <label class="profiles__label">Место проживания: 
-        <input v-model="newProfile.location" type="text" placeholder="Введите место проживания" class="profiles__input" />
-      </label>
-      <button class="profiles__button-save" @click="addProfile">Сохранить профиль</button>
-    </div>
+    <FormComponent v-if="showForm" @selectProfile="emitSelectProfile" :formFields="formFields"/>
 
     <ul class="profiles__list">
       <li 
@@ -44,23 +30,18 @@
 import { ref, onMounted, computed } from 'vue';
 import { useProfileStore } from '../stores/ProfilesStore';
 import Pagination from './Pagination.vue';
-import type { Profile, NewProfile } from '../contracts/profiles';
-
+import FormComponent from './FormComponent/FormComponent.vue'; 
+import type { Profile } from '../contracts/profiles';
 
 const emit = defineEmits<{ (e: 'selectProfile', profile: Profile): void }>(); 
 
 const profileStore = useProfileStore();
 
-const profiles = computed<Profile[]>(() => profileStore.profiles); 
-const usedProfile = computed<Profile | null>(() => profileStore.usedProfile); 
+const profiles = computed(() => profileStore.profiles); 
+const usedProfile = computed(() => profileStore.usedProfile); 
 
 const showForm = ref(false);
-const newProfile = ref<NewProfile>({ 
-  name: '',
-  age: 0,
-  email: '',
-  location: ''
-});
+
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
@@ -71,21 +52,10 @@ const paginatedProfiles = computed(() => {
   return profiles.value.slice(start, start + itemsPerPage);
 });
 
-const emitSelectProfile = (profile: Profile) => { 
-  profileStore.setUserProfile(profile);
-  emit('selectProfile', profile);
-};
-
-const addProfile = () => {
-  if (newProfile.value.name && newProfile.value.age && newProfile.value.email && newProfile.value.location) {
-    profileStore.addUserProfile({
-      ...newProfile.value
-    });
-    showForm.value = false;
-    newProfile.value = { name: '', age: 0, email: '', location: '' };
-  } else {
-    alert('Пожалуйста, заполните все поля!');
-  }
+const emitSelectProfile = (profile: Profile) => {
+  showForm.value = false; 
+  profileStore.setUserProfile(profile); // Устанавливаем выбранный профиль в store
+  emit('selectProfile', profile); // Эмитим событие в родительский компонент
 };
 
 const changePage = (page: number) => {
@@ -97,6 +67,17 @@ onMounted(async () => {
     await profileStore.fetchProfiles();
   }
 });
+
+// Метод для добавления профиля в store
+const handleAddProfile = (profile: Profile) => {
+  profileStore.addUserProfile(profile); // Добавляем новый профиль в store
+};
+const formFields = [
+  { label: 'Имя', model: 'name', type: 'text', placeholder: 'Введите имя' },
+  { label: 'Возраст', model: 'age', type: 'number', placeholder: 'Введите возраст' },
+  { label: 'Почта', model: 'email', type: 'email', placeholder: 'Введите почту' },
+  { label: 'Место проживания', model: 'location', type: 'text', placeholder: 'Введите место проживания' },
+];
 </script>
 
 <style scoped>
@@ -120,38 +101,6 @@ onMounted(async () => {
 
 .profiles__button-add:hover {
   background-color: #2ecc71;
-}
-
-.profiles__form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.profiles__label {
-  margin-bottom: 10px;
-}
-
-.profiles__input {
-  padding: 5px;
-  margin-left: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.profiles__button-save {
-  align-self: flex-start;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.profiles__button-save:hover {
-  background-color: #2980b9;
 }
 
 .profiles__list {
@@ -185,7 +134,6 @@ onMounted(async () => {
   border: 2px solid #3498db;
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .profiles__button-select {
