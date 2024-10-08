@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Todo, TodoResponse } from '../contracts/types';
+import type { Todo, TodoResponse } from '../contracts/todos';
 
 export const useTodosStore = defineStore('todosStore', () => {
   const todos = ref<Todo[]>([]);

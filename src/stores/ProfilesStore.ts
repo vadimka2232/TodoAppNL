@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Profile } from '../contracts/types'; // Используем import type
+import type { Profile } from '../contracts/profiles'; // Используем import type
 
 export const useProfileStore = defineStore('profileStore', () => {
   const profiles = ref<Profile[]>([]);
