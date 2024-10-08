@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useProfileStore } from '../../stores/ProfilesStore';
-import type { Profile, NewProfile } from '../../contracts/profiles';
+import type { Profile } from '../../contracts/profiles';
 import type { NewTodo } from '../../contracts/todos';
 
 const emit = defineEmits<{ (e: 'selectProfile', profile: Profile): void } | { (e: 'addTodo', todo: NewTodo): void }>();

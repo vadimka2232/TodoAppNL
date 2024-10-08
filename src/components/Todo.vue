@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import Pagination from './Pagination.vue';
+import Pagination from './PaginationComponent/Pagination.vue';
 import TodoTable from './TodoTable.vue';
 import FormComponent from './FormComponent/FormComponent.vue'; // Импортируем универсальную форму
 import { useTodosStore } from '../stores/TodoStore';

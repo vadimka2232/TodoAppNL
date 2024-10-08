@@ -14,7 +14,7 @@
           <td class="tr-id">{{ item.id }}</td>
           <td class="tr-todo">{{ item.todo }}</td>
           <td class="tr-completed">
-            <input 
+            <input
               type="checkbox" 
               :checked="item.completed" 
               @change="toggleCompletion(item.id, !item.completed)"
@@ -32,30 +32,30 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted } from 'vue';
 import { useTodosStore } from '../stores/TodoStore';
-import type { Todo } from '../contracts/todos'; 
+import type { Todo } from '../contracts/todos';
 
 const emit = defineEmits<{
-  (e: 'deleteTodo', id: number): void; // Типизируем событие удаления
+  (e: 'deleteTodo', id: number): void; 
 }>();
 
 const todosStore = useTodosStore();
 
-// Объявляем props для компонента
+
 const props = defineProps<{
-  todos: Todo[]; // Принимаем массив объектов Todo
-  countPages: number; // Указываем тип для countPages
+  todos: Todo[]; 
+  countPages: number; 
 }>();
 
 const toggleCompletion = (id: number, completed: boolean) => {
-  todosStore.updateTodoCompletion(id, completed); // Обновляем состояние в store
+  todosStore.updateTodoCompletion(id, completed); 
 };
 
-// Функция для удаления задачи
+
 const deleteTodo = (id: number) => {
-  emit('deleteTodo', id); // Передаем id задачи в событие
+  emit('deleteTodo', id); 
 };
 
-// Устанавливаем текущую страницу задач в store при монтировании
+
 onMounted(async () => {
   todosStore.setTodosPage(props.todos);
 });
@@ -64,43 +64,43 @@ onMounted(async () => {
 <style scoped>
 .table {
   margin: 20px;
-  border-collapse: collapse; /* Убираем двойные границы */
-  width: 100%; /* Задаем ширину таблицы */
+  border-collapse: collapse;
+  width: 100%;
 }
 
 .table-title th {
-  border-bottom: 2px solid black; /* Толстая черная линия под заголовками */
-  padding: 10px; /* Отступ для заголовков */
-  text-align: left; /* Выравнивание текста в заголовках */
+  border-bottom: 2px solid black;
+  padding: 10px;
+  text-align: left;
 }
 
 .col-id {
-  width: 50px; /* Фиксированная ширина для столбца ID */
+  width: 50px;
 }
 
 .col-todo {
-  width: 350px; /* Фиксированная ширина для столбца Todo */
+  width: 350px;
 }
 
 .col-completed {
-  width: 100px; /* Фиксированная ширина для столбца Completed */
+  width: 100px;
 }
 
 .col-actions {
-  width: 100px; /* Фиксированная ширина для столбца Actions */
+  width: 100px;
 }
 
 .tr-item {
   text-align: left;
-  background-color: #f5f5f5; /* Серый фон для строк */
+  background-color: #f5f5f5; 
 }
 
 .tr-item:nth-child(odd) {
-  background-color: #e0e0e0; /* Чередование серого фона для четных и нечетных строк */
+  background-color: #e0e0e0; 
 }
 
 .tr-item td {
-  padding: 10px; /* Отступ для ячеек */
+  padding: 10px;
 }
 
 .delete-button {

@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Todo from '../components/Todo.vue'
-import Profiles from '../components/Profile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Profiles',
-      component: Profiles
+      component: () => import('../components/Profile.vue')
     },
     {
       path: '/todo',
